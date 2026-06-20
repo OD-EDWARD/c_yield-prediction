@@ -86,10 +86,10 @@ if st.button("Predict Crop Yield"):
     )
 
     if prediction < 15:
-    st.error("Low Yield Expected")
+        st.error("Low Yield Expected")
 
     elif prediction < 25:
-    st.warning("Moderate Yield Expected")
+        st.warning("Moderate Yield Expected")
 
     else:
-    st.success("High Yield Expected")
+        st.success("High Yield Expected")
