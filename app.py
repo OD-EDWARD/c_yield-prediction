@@ -37,12 +37,7 @@ page = st.sidebar.radio(
         "About System"
     ]
 )
-
-st.sidebar.markdown("---")
-
-st.sidebar.info(
    
-)
 
 # ==========================================================
 # PREDICTION PAGE
