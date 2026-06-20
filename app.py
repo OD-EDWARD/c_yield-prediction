@@ -76,8 +76,20 @@ if st.button("Predict Crop Yield"):
         'seed_quality': ['Medium']
     })
 
+    st.subheader("Farm Information")
     prediction = model.predict(input_data)[0]
+    
 
-    st.success(
-        f"Predicted Crop Yield: {prediction:.2f} tons/hectare"
+    st.metric(
+    label="Estimated Yield",
+    value=f"{prediction:.2f} tons/hectare"
     )
+
+    if prediction < 15:
+    st.error("Low Yield Expected")
+
+    elif prediction < 25:
+    st.warning("Moderate Yield Expected")
+
+    else:
+    st.success("High Yield Expected")
