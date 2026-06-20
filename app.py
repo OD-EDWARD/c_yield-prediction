@@ -41,14 +41,7 @@ page = st.sidebar.radio(
 st.sidebar.markdown("---")
 
 st.sidebar.info(
-    """
-    Machine Learning Model
-
-    • Algorithm: Tuned XGBoost
-    • R² Score: 0.8429
-    • MAE: 1.3793
-    • RMSE: 1.7504
-    """
+   
 )
 
 # ==========================================================
