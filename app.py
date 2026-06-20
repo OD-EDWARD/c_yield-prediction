@@ -292,51 +292,43 @@ elif page == "Model Performance":
     # ACTUAL VS PREDICTED CHART
     # ==========================================
 
-    st.subheader("🌾 Actual Crop Yield vs Predicted Crop Yield")
+   st.subheader("🌾 Actual vs Predicted Crop Yield (Line Comparison)")
 
-    fig = go.Figure()
+# Sort values for proper line visualization
+line_df = sample_df.sort_values(by="Actual").reset_index(drop=True)
 
-    fig.add_trace(
-        go.Scatter(
-            x=sample_df["Actual"],
-            y=sample_df["Predicted"],
-            mode="markers",
-            name="Predictions"
-        )
+fig = go.Figure()
+
+# Actual line
+fig.add_trace(
+    go.Scatter(
+        x=line_df.index,
+        y=line_df["Actual"],
+        mode="lines",
+        name="Actual Yield",
+        line=dict(width=3)
     )
+)
 
-    min_val = min(
-        sample_df["Actual"].min(),
-        sample_df["Predicted"].min()
+# Predicted line
+fig.add_trace(
+    go.Scatter(
+        x=line_df.index,
+        y=line_df["Predicted"],
+        mode="lines",
+        name="Predicted Yield",
+        line=dict(width=3, dash="dash")
     )
+)
 
-    max_val = max(
-        sample_df["Actual"].max(),
-        sample_df["Predicted"].max()
-    )
+fig.update_layout(
+    title="Actual vs Predicted Crop Yield Comparison",
+    xaxis_title="Samples",
+    yaxis_title="Yield (tons/hectare)",
+    height=500
+)
 
-    fig.add_trace(
-        go.Scatter(
-            x=[min_val, max_val],
-            y=[min_val, max_val],
-            mode="lines",
-            name="Perfect Prediction"
-        )
-    )
-
-    fig.update_layout(
-        title="Actual vs Predicted Crop Yield",
-        xaxis_title="Actual Yield (tons/hectare)",
-        yaxis_title="Predicted Yield (tons/hectare)",
-        height=600
-    )
-
-    st.plotly_chart(
-        fig,
-        use_container_width=True
-    )
-
-    st.markdown("---")
+st.plotly_chart(fig, use_container_width=True)
 
     # ==========================================
     # RESIDUAL ERROR PLOT
