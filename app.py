@@ -3,6 +3,9 @@ import pandas as pd
 import joblib
 import plotly.graph_objects as go
 import plotly.express as px
+actual_pred_df = pd.read_csv(
+    "actual_vs_predicted.csv"
+)
 
 # ==========================================================
 # PAGE CONFIG
@@ -233,52 +236,171 @@ Predicted Yield:
 
 elif page == "Model Performance":
 
-    st.title("📊 Model Performance")
+    st.title("📊 Model Performance Dashboard")
+
+    # ==========================================
+    # ACCURACY METRIC
+    # ==========================================
+
+    accuracy = 84.29
+
+    st.metric(
+        label="Prediction Accuracy",
+        value=f"{accuracy:.2f}%"
+    )
+
+    st.markdown("---")
+
+    # ==========================================
+    # EVALUATION METRICS
+    # ==========================================
+
+    st.subheader("Evaluation Metrics")
 
     col1, col2, col3 = st.columns(3)
 
-    col1.metric(
-        "R² Score",
-        "0.8429"
+    with col1:
+        st.metric(
+            "MAE",
+            "1.3793"
+        )
+
+    with col2:
+        st.metric(
+            "RMSE",
+            "1.7504"
+        )
+
+    with col3:
+        st.metric(
+            "R² Score",
+            "0.8429"
+        )
+
+    st.info(
+        """
+        The Tuned XGBoost model explains approximately
+        84.29% of the variability in crop yield predictions.
+        """
     )
 
-    col2.metric(
-        "MAE",
-        "1.3793"
+    st.markdown("---")
+
+    # ==========================================
+    # LOAD ACTUAL VS PREDICTED DATA
+    # ==========================================
+
+    actual_pred_df = pd.read_csv(
+        "actual_vs_predicted.csv"
     )
 
-    col3.metric(
-        "RMSE",
-        "1.7504"
+    # Use sample for faster rendering
+    sample_df = actual_pred_df.sample(
+        min(1000, len(actual_pred_df)),
+        random_state=42
     )
 
-    st.subheader("Model Comparison")
+    # ==========================================
+    # ACTUAL VS PREDICTED CHART
+    # ==========================================
 
-    comparison_df = pd.DataFrame({
-        "Model": [
-            "Random Forest",
-            "Extra Trees",
-            "XGBoost",
-            "Tuned XGBoost"
-        ],
-        "R²": [
-            0.8008,
-            0.8011,
-            0.8397,
-            0.8429
-        ]
-    })
+    st.subheader("🌾 Actual Crop Yield vs Predicted Crop Yield")
 
-    fig = px.bar(
-        comparison_df,
-        x="Model",
-        y="R²",
-        title="Model Comparison"
+    fig = go.Figure()
+
+    fig.add_trace(
+        go.Scatter(
+            x=sample_df["Actual"],
+            y=sample_df["Predicted"],
+            mode="markers",
+            name="Predictions"
+        )
+    )
+
+    min_val = min(
+        sample_df["Actual"].min(),
+        sample_df["Predicted"].min()
+    )
+
+    max_val = max(
+        sample_df["Actual"].max(),
+        sample_df["Predicted"].max()
+    )
+
+    fig.add_trace(
+        go.Scatter(
+            x=[min_val, max_val],
+            y=[min_val, max_val],
+            mode="lines",
+            name="Perfect Prediction"
+        )
+    )
+
+    fig.update_layout(
+        title="Actual vs Predicted Crop Yield",
+        xaxis_title="Actual Yield (tons/hectare)",
+        yaxis_title="Predicted Yield (tons/hectare)",
+        height=600
     )
 
     st.plotly_chart(
         fig,
         use_container_width=True
+    )
+
+    st.markdown("---")
+
+    # ==========================================
+    # RESIDUAL ERROR PLOT
+    # ==========================================
+
+    st.subheader("📉 Residual Error Analysis")
+
+    sample_df["Residual"] = (
+        sample_df["Actual"] -
+        sample_df["Predicted"]
+    )
+
+    residual_fig = px.scatter(
+        sample_df,
+        x="Predicted",
+        y="Residual",
+        title="Residual Error Plot"
+    )
+
+    residual_fig.update_layout(
+        xaxis_title="Predicted Yield",
+        yaxis_title="Residual Error",
+        height=600
+    )
+
+    st.plotly_chart(
+        residual_fig,
+        use_container_width=True
+    )
+
+    st.markdown("---")
+
+    # ==========================================
+    # MODEL SUMMARY
+    # ==========================================
+
+    st.subheader("📋 Model Summary")
+
+    st.success(
+        """
+        ✔ Model: Tuned XGBoost Regressor
+
+        ✔ Accuracy: 84.29%
+
+        ✔ MAE: 1.3793
+
+        ✔ RMSE: 1.7504
+
+        ✔ R² Score: 0.8429
+
+        ✔ Status: Production Ready
+        """
     )
 
 # ==========================================================
