@@ -328,6 +328,35 @@ elif page == "Model Performance":
         use_container_width=True
     )
 
+    st.subheader("📊 Model Comparison")
+    
+    comparison_df = pd.DataFrame({
+        "Model": [
+            "Random Forest",
+            "Extra Trees",
+            "XGBoost",
+            "Tuned XGBoost"
+        ],
+        "R2 Score": [
+            0.8008,
+            0.8011,
+            0.8397,
+            0.8429
+        ]
+    })
+
+    comparison_fig = px.bar(
+        comparison_df,
+        x="Model",
+        y="R2 Score",
+        title="Performance of Machine Learning Models"
+    )
+
+    st.plotly_chart(
+        comparison_fig,
+        use_container_width=True
+    )
+
     # ==========================================
     # RESIDUAL ERROR PLOT
     # ==========================================
