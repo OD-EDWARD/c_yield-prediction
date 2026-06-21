@@ -289,45 +289,44 @@ elif page == "Model Performance":
     )
 
     # ==========================================
-    # ACTUAL VS PREDICTED CHART
+    # ACTUAL VS PREDICTED LINE GRAPH
     # ==========================================
-st.subheader("🌾 Actual vs Predicted Crop Yield (Line Comparison)")
 
-# Sort values for proper line visualization
-line_df = sample_df.sort_values(by="Actual").reset_index(drop=True)
+    st.subheader("🌾 Actual vs Predicted Crop Yield")
 
-fig = go.Figure()
+    line_df = actual_pred_df.head(200).copy()
 
-# Actual line
-fig.add_trace(
-    go.Scatter(
-        x=line_df.index,
-        y=line_df["Actual"],
-        mode="lines",
-        name="Actual Yield",
-        line=dict(width=3)
+    fig = go.Figure()
+
+    fig.add_trace(
+        go.Scatter(
+            x=line_df.index,
+            y=line_df["Actual"],
+            mode="lines",
+            name="Actual Yield"
+        )
     )
-)
 
-# Predicted line
-fig.add_trace(
-    go.Scatter(
-        x=line_df.index,
-        y=line_df["Predicted"],
-        mode="lines",
-        name="Predicted Yield",
-        line=dict(width=3, dash="dash")
+    fig.add_trace(
+        go.Scatter(
+            x=line_df.index,
+            y=line_df["Predicted"],
+            mode="lines",
+            name="Predicted Yield"
+        )
     )
-)
 
-fig.update_layout(
-    title="Actual vs Predicted Crop Yield Comparison",
-    xaxis_title="Samples",
-    yaxis_title="Yield (tons/hectare)",
-    height=500
-)
+    fig.update_layout(
+        title="Actual vs Predicted Crop Yield",
+        xaxis_title="Samples",
+        yaxis_title="Yield (tons/hectare)",
+        height=500
+    )
 
-st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(
+        fig,
+        use_container_width=True
+    )
 
     # ==========================================
     # RESIDUAL ERROR PLOT
