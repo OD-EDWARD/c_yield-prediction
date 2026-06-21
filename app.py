@@ -358,35 +358,46 @@ elif page == "Model Performance":
     )
 
     # ==========================================
-    # RESIDUAL ERROR PLOT
+    # RESIDUAL ERROR TREND
     # ==========================================
 
-    st.subheader("📉 Residual Error Analysis")
+    st.subheader("📉 Residual Error Trend")
 
-    sample_df["Residual"] = (
-        sample_df["Actual"] -
-        sample_df["Predicted"]
+    residual_df = actual_pred_df.head(200).copy()
+
+    residual_df["Residual"] = (
+        residual_df["Actual"] -
+        residual_df["Predicted"]
     )
 
-    residual_fig = px.scatter(
-        sample_df,
-        x="Predicted",
-        y="Residual",
-        title="Residual Error Plot"
+    fig = go.Figure()
+
+    fig.add_trace(
+        go.Scatter(
+            x=residual_df.index,
+            y=residual_df["Residual"],
+            mode="lines",
+            name="Residual Error"
+        )
     )
 
-    residual_fig.update_layout(
-        xaxis_title="Predicted Yield",
+    fig.add_hline(
+        y=0,
+        line_dash="dash",
+        annotation_text="Zero Error"
+    )
+
+    fig.update_layout(
+        title="Residual Error Trend",
+        xaxis_title="Sample Number",
         yaxis_title="Residual Error",
-        height=600
+        height=500
     )
 
     st.plotly_chart(
-        residual_fig,
+        fig,
         use_container_width=True
     )
-
-    st.markdown("---")
 
     # ==========================================
     # MODEL SUMMARY
