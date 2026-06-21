@@ -455,5 +455,5 @@ elif page == "About System":
     - R² Score: 0.8429
     - MAE: 1.3793
     - RMSE: 1.7504
-
+    """
     )
