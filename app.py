@@ -431,7 +431,7 @@ elif page == "About System":
 
     st.markdown(
         """
-### Smart Crop Yield Prediction System
+### An Intelligent Crop Yield Prediction System
 
 This application predicts crop yield using
 Machine Learning techniques.
@@ -456,10 +456,4 @@ Hyperparameter-Tuned XGBoost Regressor.
 - MAE: 1.3793
 - RMSE: 1.7504
 
-### Developer
-
-Adeyinka Ademola
-Computer Science
-Bowen University
-"""
     )
