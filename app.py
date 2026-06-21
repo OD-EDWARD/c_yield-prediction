@@ -431,7 +431,7 @@ elif page == "About System":
 
     st.markdown(
     """
-    ### An Intelligent Crop Yield Prediction System
+    ### An Intelligent Based Crop Yield Prediction System
     
     This application predicts crop yield using
     Machine Learning techniques.
