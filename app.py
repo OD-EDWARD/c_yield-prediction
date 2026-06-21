@@ -430,30 +430,30 @@ elif page == "About System":
     st.title("ℹ️ About This System")
 
     st.markdown(
-        """
-### An Intelligent Crop Yield Prediction System
-
-This application predicts crop yield using
-Machine Learning techniques.
-
-### Features
-
-- Crop Yield Prediction
-- Yield Classification
-- Smart Recommendations
-- Prediction History
-- Downloadable Reports
-- Interactive Dashboard
-
-### Machine Learning Model
-
-The final model used is a
-Hyperparameter-Tuned XGBoost Regressor.
-
-### Performance
-
-- R² Score: 0.8429
-- MAE: 1.3793
-- RMSE: 1.7504
+    """
+    ### An Intelligent Crop Yield Prediction System
+    
+    This application predicts crop yield using
+    Machine Learning techniques.
+    
+    ### Features
+    
+    - Crop Yield Prediction
+    - Yield Classification
+    - Smart Recommendations
+    - Prediction History
+    - Downloadable Reports
+    - Interactive Dashboard
+    
+    ### Machine Learning Model
+    
+    The final model used is a
+    Hyperparameter-Tuned XGBoost Regressor.
+    
+    ### Performance
+    
+    - R² Score: 0.8429
+    - MAE: 1.3793
+    - RMSE: 1.7504
 
     )
