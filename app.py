@@ -291,8 +291,7 @@ elif page == "Model Performance":
     # ==========================================
     # ACTUAL VS PREDICTED CHART
     # ==========================================
-
-   st.subheader("🌾 Actual vs Predicted Crop Yield (Line Comparison)")
+st.subheader("🌾 Actual vs Predicted Crop Yield (Line Comparison)")
 
 # Sort values for proper line visualization
 line_df = sample_df.sort_values(by="Actual").reset_index(drop=True)
