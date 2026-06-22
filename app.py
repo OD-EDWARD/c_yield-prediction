@@ -27,7 +27,7 @@ model = joblib.load("crop_yield_model.pkl")
 # SIDEBAR
 # ==========================================================
 
-st.sidebar.title("🌾 Crop Yield Predictor")
+st.sidebar.title("Crop Yield Predictor")
 
 page = st.sidebar.radio(
     "Navigation",
@@ -45,7 +45,7 @@ page = st.sidebar.radio(
 
 if page == "Prediction":
 
-    st.title("🌾 Smart Crop Yield Prediction Dashboard")
+    st.title("Smart Crop Yield Prediction Dashboard")
 
     st.caption(
         "AI-powered crop yield forecasting system"
@@ -198,7 +198,7 @@ Predicted Yield:
 """
 
         st.download_button(
-            label="📥 Download Prediction Report",
+            label="Download Prediction Report",
             data=report,
             file_name="crop_yield_report.txt",
             mime="text/plain"
@@ -224,7 +224,7 @@ Predicted Yield:
 
 elif page == "Model Performance":
 
-    st.title("📊 Model Performance Dashboard")
+    st.title("Model Performance Dashboard")
 
     # ==========================================
     # ACCURACY METRIC
@@ -328,7 +328,7 @@ elif page == "Model Performance":
         use_container_width=True
     )
 
-    st.subheader("📊 Model Comparison")
+    st.subheader("Model Comparison")
     
     comparison_df = pd.DataFrame({
         "Model": [
@@ -361,7 +361,7 @@ elif page == "Model Performance":
     # RESIDUAL ERROR TREND
     # ==========================================
 
-    st.subheader("📉 Residual Error Trend")
+    st.subheader("Residual Error Trend")
 
     residual_df = actual_pred_df.head(200).copy()
 
@@ -403,7 +403,7 @@ elif page == "Model Performance":
     # MODEL SUMMARY
     # ==========================================
 
-    st.subheader("📋 Model Summary")
+    st.subheader("Model Summary")
 
     st.success(
         """
@@ -427,7 +427,7 @@ elif page == "Model Performance":
 
 elif page == "About System":
 
-    st.title("ℹ️ About This System")
+    st.title("About This System")
 
     st.markdown(
     """
