@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 
 # ──────────────────────────────────────────────────────────────────────────────
-# PAGE CONFIG  (must be first Streamlit call)
+# PAGE CONFIG
 # ──────────────────────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="Smart Crop Yield Predictor",
@@ -16,29 +16,61 @@ st.set_page_config(
 )
 
 # ──────────────────────────────────────────────────────────────────────────────
-# GLOBAL CSS
+# GLOBAL CSS  — every text element has an explicit dark colour
 # ──────────────────────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
-/* ── Base ── */
+
+/* ── Base background ── */
 [data-testid="stAppViewContainer"] { background: #f5f7f2; }
+
+/* ── All body text dark by default ── */
+html, body, [class*="css"], p, span, div, li, td, th, label,
+.stMarkdown, .stMarkdown p, .stMarkdown li, .stMarkdown span,
+.stMarkdown h1, .stMarkdown h2, .stMarkdown h3,
+.stMarkdown h4, .stMarkdown h5, .stMarkdown h6 {
+    color: #1a1a1a;
+}
+
+/* ── Sidebar ── */
 [data-testid="stSidebar"] { background: #1b4332; }
-[data-testid="stSidebar"] * { color: #d8f3dc !important; }
-[data-testid="stSidebar"] .stRadio label { font-size: 1rem; padding: 6px 0; }
+[data-testid="stSidebar"] *,
+[data-testid="stSidebar"] p,
+[data-testid="stSidebar"] span,
+[data-testid="stSidebar"] label,
+[data-testid="stSidebar"] div,
+[data-testid="stSidebar"] .stMarkdown,
+[data-testid="stSidebar"] .stMarkdown p,
+[data-testid="stSidebar"] .stMarkdown span,
+[data-testid="stSidebar"] small {
+    color: #d8f3dc !important;
+}
 [data-testid="stSidebar"] hr { border-color: #40916c55; }
+[data-testid="stSidebar"] .stRadio label { font-size: 1rem; padding: 6px 0; }
 
 /* ── Metric cards ── */
 [data-testid="metric-container"] {
-    background: #000000;
+    background: #ffffff;
     border: 1px solid #d8f3dc;
     border-left: 5px solid #40916c;
     border-radius: 10px;
     padding: 16px 20px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
-[data-testid="metric-container"] label { color: #52796f !important; font-weight: 600; }
-[data-testid="metric-container"] [data-testid="stMetricValue"] {
-    color: #1b4332 !important; font-size: 1.6rem !important; font-weight: 700;
+[data-testid="metric-container"] label,
+[data-testid="metric-container"] [data-testid="stMetricLabel"] p {
+    color: #2d6a4f !important;
+    font-weight: 600;
+}
+[data-testid="metric-container"] [data-testid="stMetricValue"],
+[data-testid="metric-container"] [data-testid="stMetricValue"] div {
+    color: #1b4332 !important;
+    font-size: 1.6rem !important;
+    font-weight: 700;
+}
+[data-testid="metric-container"] [data-testid="stMetricDelta"],
+[data-testid="metric-container"] [data-testid="stMetricDelta"] p {
+    color: #52796f !important;
 }
 
 /* ── Section cards ── */
@@ -48,31 +80,104 @@ st.markdown("""
     padding: 24px 28px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.06);
     margin-bottom: 20px;
+    color: #1a1a1a;
 }
+.section-card p, .section-card li,
+.section-card span, .section-card td,
+.section-card th { color: #1a1a1a !important; }
+.section-card h3 { color: #1b4332 !important; }
 
-/* ── Page header ── */
+/* ── Page header (gradient banner) ── */
 .page-header {
     background: linear-gradient(135deg, #1b4332 0%, #40916c 100%);
-    color: white;
     padding: 28px 32px;
     border-radius: 14px;
     margin-bottom: 24px;
 }
-.page-header h1 { color: white !important; margin: 0; font-size: 2rem; }
-.page-header p  { color: #d8f3dc; margin: 6px 0 0 0; font-size: 1rem; }
+.page-header h1  { color: #ffffff !important; margin: 0; font-size: 2rem; }
+.page-header p   { color: #d8f3dc !important; margin: 6px 0 0 0; font-size: 1rem; }
 
 /* ── Yield band badges ── */
-.badge-high { background:#d8f3dc; color:#1b4332; padding:6px 14px; border-radius:20px; font-weight:700; }
-.badge-mid  { background:#fff3cd; color:#7d5a00; padding:6px 14px; border-radius:20px; font-weight:700; }
-.badge-low  { background:#f8d7da; color:#842029; padding:6px 14px; border-radius:20px; font-weight:700; }
+.badge-high { background:#d8f3dc; color:#1b4332 !important; padding:6px 14px; border-radius:20px; font-weight:700; display:inline-block; }
+.badge-mid  { background:#fff3cd; color:#7d5a00 !important; padding:6px 14px; border-radius:20px; font-weight:700; display:inline-block; }
+.badge-low  { background:#f8d7da; color:#842029 !important; padding:6px 14px; border-radius:20px; font-weight:700; display:inline-block; }
+
+/* ── Recommendation band header ── */
+.rec-band {
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
 
 /* ── Input labels ── */
-label { font-weight: 600 !important; color: #2d6a4f !important; }
+label, .stSelectbox label, .stSlider label,
+.stExpander label, div[data-testid="stFormLabel"] {
+    font-weight: 600 !important;
+    color: #2d6a4f !important;
+}
+
+/* ── Slider value text ── */
+[data-testid="stSlider"] div[data-testid="stMarkdownContainer"] p {
+    color: #1a1a1a !important;
+}
+
+/* ── Expander header text ── */
+[data-testid="stExpander"] summary p,
+[data-testid="stExpander"] summary span,
+[data-testid="stExpander"] summary {
+    color: #1b4332 !important;
+    font-weight: 600;
+}
+[data-testid="stExpander"] { border: 1px solid #d8f3dc; border-radius: 10px; }
+
+/* ── Markdown headings inside main area ── */
+.stMarkdown h1, .stMarkdown h2, .stMarkdown h3,
+.stMarkdown h4, .stMarkdown h5 {
+    color: #1b4332 !important;
+}
+
+/* ── Markdown body text ── */
+.stMarkdown p, .stMarkdown li, .stMarkdown td, .stMarkdown th {
+    color: #1a1a1a !important;
+}
+
+/* ── Tables in markdown ── */
+.stMarkdown table { width: 100%; border-collapse: collapse; }
+.stMarkdown table th {
+    background: #1b4332 !important;
+    color: #ffffff !important;
+    padding: 8px 12px;
+}
+.stMarkdown table td {
+    color: #1a1a1a !important;
+    padding: 7px 12px;
+    border-bottom: 1px solid #e0e0e0;
+}
+.stMarkdown table tr:nth-child(even) td { background: #f5f7f2; }
+
+/* ── st.caption ── */
+[data-testid="stCaptionContainer"] p,
+.stCaption, .stCaption p { color: #52796f !important; font-size: 0.85rem; }
+
+/* ── st.info / st.success / st.warning / st.error ── */
+[data-testid="stAlert"] p,
+[data-testid="stAlert"] span,
+[data-testid="stAlert"] div { color: #1a1a1a !important; }
+
+/* ── Tabs ── */
+[data-baseweb="tab"] { font-weight: 600; color: #1a1a1a !important; }
+[aria-selected="true"][data-baseweb="tab"] { color: #2d6a4f !important; border-bottom-color: #2d6a4f !important; }
+[data-baseweb="tab-panel"] p,
+[data-baseweb="tab-panel"] span { color: #1a1a1a !important; }
+
+/* ── Dataframe ── */
+[data-testid="stDataFrame"] { border-radius: 10px; overflow: hidden; }
 
 /* ── Predict button ── */
 div.stButton > button {
     background: linear-gradient(135deg, #2d6a4f, #52b788);
-    color: white;
+    color: #ffffff !important;
     border: none;
     border-radius: 8px;
     padding: 12px 32px;
@@ -83,26 +188,32 @@ div.stButton > button {
     transition: opacity .2s;
 }
 div.stButton > button:hover { opacity: 0.88; }
-
-/* ── Tabs ── */
-[data-baseweb="tab"] { font-weight: 600; }
-[aria-selected="true"][data-baseweb="tab"] { color: #2d6a4f !important; border-bottom-color: #2d6a4f !important; }
-
-/* ── Dataframe ── */
-[data-testid="stDataFrame"] { border-radius: 10px; overflow: hidden; }
+div.stButton > button p,
+div.stButton > button span { color: #ffffff !important; }
 
 /* ── Download button ── */
 [data-testid="stDownloadButton"] > button {
-    background: #40916c;
-    color: white;
+    background: #40916c !important;
+    color: #ffffff !important;
     border: none;
     border-radius: 8px;
     font-weight: 600;
     padding: 10px 24px;
 }
+[data-testid="stDownloadButton"] > button p,
+[data-testid="stDownloadButton"] > button span { color: #ffffff !important; }
 
-/* ── Expander ── */
-[data-testid="stExpander"] { border: 1px solid #d8f3dc; border-radius: 10px; }
+/* ── selectbox / dropdown text ── */
+[data-baseweb="select"] span,
+[data-baseweb="select"] div,
+[data-baseweb="menu"] li { color: #1a1a1a !important; }
+
+/* ── Radio button text ── */
+.stRadio div label span { color: #d8f3dc !important; }
+
+/* ── st.markdown bold ── */
+strong { color: inherit !important; }
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -116,16 +227,14 @@ def load_model():
 @st.cache_data
 def load_results():
     try:
-        df = pd.read_csv("actual_vs_predicted.csv")
-        return df
+        return pd.read_csv("actual_vs_predicted.csv")
     except Exception:
         return None
 
 @st.cache_data
 def load_feature_importance():
     try:
-        df = pd.read_csv("feature_importance.csv")
-        return df
+        return pd.read_csv("feature_importance.csv")
     except Exception:
         return None
 
@@ -135,8 +244,8 @@ try:
 except Exception:
     model_loaded = False
 
-actual_pred_df   = load_results()
-feature_imp_df   = load_feature_importance()
+actual_pred_df = load_results()
+feature_imp_df = load_feature_importance()
 
 # ──────────────────────────────────────────────────────────────────────────────
 # SIDEBAR
@@ -158,7 +267,7 @@ with st.sidebar:
     st.markdown("**Accuracy:** 84.29%")
     st.markdown("---")
     st.markdown(
-        "<small>© 2026 Smart Crop Yield Predictor<br>Final Year Project</small>",
+        "<small style='color:#d8f3dc'>© 2026 Smart Crop Yield Predictor<br>Final Year Project</small>",
         unsafe_allow_html=True
     )
 
@@ -166,13 +275,7 @@ with st.sidebar:
 # HELPER: GAUGE CHART
 # ──────────────────────────────────────────────────────────────────────────────
 def make_gauge(value):
-    if value < 15:
-        color = "#e63946"
-    elif value < 27:
-        color = "#f4a261"
-    else:
-        color = "#52b788"
-
+    color = "#e63946" if value < 15 else ("#f4a261" if value < 27 else "#52b788")
     fig = go.Figure(go.Indicator(
         mode="gauge+number+delta",
         value=value,
@@ -180,14 +283,15 @@ def make_gauge(value):
         title={"text": "Predicted Yield (tons/ha)", "font": {"size": 18, "color": "#1b4332"}},
         number={"suffix": " t/ha", "font": {"size": 32, "color": "#1b4332"}},
         gauge={
-            "axis": {"range": [0, 41], "tickwidth": 1, "tickcolor": "#aaa"},
+            "axis": {"range": [0, 41], "tickwidth": 1, "tickcolor": "#555",
+                     "tickfont": {"color": "#333"}},
             "bar":  {"color": color, "thickness": 0.3},
             "bgcolor": "#f5f7f2",
             "borderwidth": 0,
             "steps": [
-                {"range": [0, 15],    "color": "#fde8e9"},
-                {"range": [15, 27],   "color": "#fff3cd"},
-                {"range": [27, 41],   "color": "#d8f3dc"},
+                {"range": [0,  15], "color": "#fde8e9"},
+                {"range": [15, 27], "color": "#fff3cd"},
+                {"range": [27, 41], "color": "#d8f3dc"},
             ],
             "threshold": {
                 "line": {"color": "#1b4332", "width": 3},
@@ -200,7 +304,8 @@ def make_gauge(value):
         height=300,
         margin=dict(t=60, b=20, l=30, r=30),
         paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)"
+        plot_bgcolor="rgba(0,0,0,0)",
+        font={"color": "#1a1a1a"}
     )
     return fig
 
@@ -235,12 +340,7 @@ RECS = {
 }
 
 def get_recommendations(prediction, crop):
-    if prediction < 15:
-        band = "low"
-    elif prediction < 27:
-        band = "moderate"
-    else:
-        band = "high"
+    band = "low" if prediction < 15 else ("moderate" if prediction < 27 else "high")
     recs = RECS[band].get(crop.lower(), RECS[band]["default"])
     return band, recs
 
@@ -256,22 +356,18 @@ if page == "🏠 Prediction":
     </div>
     """, unsafe_allow_html=True)
 
-    # ── Input section ──
     st.markdown('<div class="section-card">', unsafe_allow_html=True)
     st.markdown("### 🌱 Farm Parameters")
 
     col1, col2, col3 = st.columns(3)
-
     with col1:
         crop_type = st.selectbox("Crop Type", ["corn", "rice", "soybean", "wheat", "cotton"])
         season    = st.selectbox("Season", ["Spring", "Summer", "Autumn", "Winter"])
         soil_type = st.selectbox("Soil Type", ["Loamy", "Clay", "Sandy", "Silt"])
-
     with col2:
         fertilized       = st.selectbox("Fertilizer Applied?", ["Yes", "No"])
         irrigation_input = st.selectbox("Irrigation Method", ["Drip", "Sprinkler", "Flood", "None"])
         seed_quality     = st.selectbox("Seed Quality", ["Certified", "Improved", "Local"])
-
     with col3:
         rainfall_mm  = st.slider("Rainfall (mm/season)", 200, 2000, 1200, 50)
         avg_temp_c   = st.slider("Average Temperature (°C)", 10, 45, 28, 1)
@@ -280,23 +376,21 @@ if page == "🏠 Prediction":
     with st.expander("⚙️ Advanced Soil Parameters (optional — defaults are zone averages)"):
         c1, c2, c3 = st.columns(3)
         with c1:
-            soil_ph         = st.slider("Soil pH", 4.0, 9.0, 6.5, 0.1)
-            nitrogen_kg_ha  = st.slider("Nitrogen (kg/ha)", 0, 300, 120, 10)
+            soil_ph        = st.slider("Soil pH", 4.0, 9.0, 6.5, 0.1)
+            nitrogen_kg_ha = st.slider("Nitrogen (kg/ha)", 0, 300, 120, 10)
         with c2:
             phosphorus_kg_ha = st.slider("Phosphorus (kg/ha)", 0, 200, 60, 5)
             potassium_kg_ha  = st.slider("Potassium (kg/ha)", 0, 300, 80, 10)
         with c3:
-            irrigation_mm        = st.slider("Irrigation Applied (mm)", 0, 1500, 500, 50)
-            pest_index           = st.slider("Pest Pressure Index (0–10)", 0, 10, 2, 1)
-            days_from_harvest    = st.slider("Days Since Last Harvest", 10, 365, 60, 5)
+            irrigation_mm  = st.slider("Irrigation Applied (mm)", 0, 1500, 500, 50)
+            pest_index     = st.slider("Pest Pressure Index (0–10)", 0, 10, 2, 1)
+            days_from_harvest = st.slider("Days Since Last Harvest", 10, 365, 60, 5)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # Session state
     if "history" not in st.session_state:
         st.session_state.history = []
 
-    # ── Predict button ──
     predict_clicked = st.button("🔍 Predict Crop Yield", use_container_width=True)
 
     if predict_clicked:
@@ -304,29 +398,29 @@ if page == "🏠 Prediction":
             st.error("Model file not found. Please ensure crop_yield_model.pkl is present.")
         else:
             input_data = pd.DataFrame({
-                'rainfall_mm':         [rainfall_mm],
-                'avg_temp_c':          [avg_temp_c],
-                'humidity_pct':        [humidity_pct],
-                'soil_ph':             [soil_ph],
-                'nitrogen_kg_ha':      [nitrogen_kg_ha],
-                'phosphorus_kg_ha':    [phosphorus_kg_ha],
-                'potassium_kg_ha':     [potassium_kg_ha],
-                'irrigation_mm':       [irrigation_mm],
-                'pest_index':          [pest_index],
+                'rainfall_mm':            [rainfall_mm],
+                'avg_temp_c':             [avg_temp_c],
+                'humidity_pct':           [humidity_pct],
+                'soil_ph':                [soil_ph],
+                'nitrogen_kg_ha':         [nitrogen_kg_ha],
+                'phosphorus_kg_ha':       [phosphorus_kg_ha],
+                'potassium_kg_ha':        [potassium_kg_ha],
+                'irrigation_mm':          [irrigation_mm],
+                'pest_index':             [pest_index],
                 'days_from_last_harvest': [days_from_harvest],
-                'weather_zone':        ['Tropical'],
-                'soil_type':           [soil_type],
-                'season':              [season],
-                'crop_type':           [crop_type],
-                'irrigation_method':   [irrigation_input],
-                'fertilized':          [fertilized],
-                'seed_quality':        [seed_quality],
+                'weather_zone':           ['Tropical'],
+                'soil_type':              [soil_type],
+                'season':                 [season],
+                'crop_type':              [crop_type],
+                'irrigation_method':      [irrigation_input],
+                'fertilized':             [fertilized],
+                'seed_quality':           [seed_quality],
             })
 
             prediction = model.predict(input_data)[0]
             band, recs = get_recommendations(prediction, crop_type)
 
-            # ── Results layout ──
+            # ── Result card ──
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
             st.markdown("### 📊 Prediction Result")
 
@@ -338,7 +432,6 @@ if page == "🏠 Prediction":
             with res_col2:
                 st.markdown("<br>", unsafe_allow_html=True)
 
-                # Yield band badge
                 badge_html = {
                     "low":      '<span class="badge-low">🔴 Low Yield Expected</span>',
                     "moderate": '<span class="badge-mid">🟡 Moderate Yield Expected</span>',
@@ -350,7 +443,6 @@ if page == "🏠 Prediction":
                 m1, m2 = st.columns(2)
                 m1.metric("Predicted Yield", f"{prediction:.2f} t/ha")
                 m2.metric("vs Dataset Mean", f"{prediction - 23.72:+.2f} t/ha")
-
                 m3, m4 = st.columns(2)
                 m3.metric("Crop", crop_type.capitalize())
                 m4.metric("Season", season)
@@ -361,61 +453,61 @@ if page == "🏠 Prediction":
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
             st.markdown("### 💡 Smart Agronomic Recommendations")
 
-            band_labels = {
-                "low": ("🔴 Low Yield Band (< 15 t/ha)", "#f8d7da", "#842029"),
+            band_styles = {
+                "low":      ("🔴 Low Yield Band (< 15 t/ha)",      "#f8d7da", "#842029"),
                 "moderate": ("🟡 Moderate Yield Band (15–27 t/ha)", "#fff3cd", "#7d5a00"),
-                "high": ("🟢 High Yield Band (> 27 t/ha)", "#d8f3dc", "#1b4332"),
+                "high":     ("🟢 High Yield Band (> 27 t/ha)",      "#d8f3dc", "#1b4332"),
             }
-            label, bg, fg = band_labels[band]
+            label, bg, fg = band_styles[band]
             st.markdown(
-                f'<div style="background:{bg};color:{fg};padding:10px 16px;border-radius:8px;font-weight:600;margin-bottom:12px">{label}</div>',
+                f'<div class="rec-band" style="background:{bg};color:{fg};">{label}</div>',
                 unsafe_allow_html=True
             )
-
             for i, rec in enumerate(recs, 1):
-                st.markdown(f"**{i}.** {rec}")
-
+                st.markdown(
+                    f'<p style="color:#1a1a1a;margin:6px 0"><strong style="color:#1b4332">{i}.</strong> {rec}</p>',
+                    unsafe_allow_html=True
+                )
             st.markdown('</div>', unsafe_allow_html=True)
 
-            # ── Download report ──
-            report = f"""
-SMART CROP YIELD PREDICTION REPORT
+            # ── Download ──
+            report = f"""SMART CROP YIELD PREDICTION REPORT
 ====================================
 Generated by: CropYield AI System
 Academic Year: 2025/2026
 
 FARM PARAMETERS
 ---------------
-Crop Type        : {crop_type.capitalize()}
-Soil Type        : {soil_type}
-Season           : {season}
-Irrigation Method: {irrigation_input}
-Fertilizer       : {fertilized}
-Seed Quality     : {seed_quality}
-Rainfall (mm)    : {rainfall_mm}
-Temperature (°C) : {avg_temp_c}
-Humidity (%)     : {humidity_pct}
-Soil pH          : {soil_ph}
-Nitrogen (kg/ha) : {nitrogen_kg_ha}
+Crop Type         : {crop_type.capitalize()}
+Soil Type         : {soil_type}
+Season            : {season}
+Irrigation Method : {irrigation_input}
+Fertilizer        : {fertilized}
+Seed Quality      : {seed_quality}
+Rainfall (mm)     : {rainfall_mm}
+Temperature (°C)  : {avg_temp_c}
+Humidity (%)      : {humidity_pct}
+Soil pH           : {soil_ph}
+Nitrogen (kg/ha)  : {nitrogen_kg_ha}
 Phosphorus (kg/ha): {phosphorus_kg_ha}
 Potassium (kg/ha) : {potassium_kg_ha}
-Irrigation (mm)  : {irrigation_mm}
-Pest Index       : {pest_index}
+Irrigation (mm)   : {irrigation_mm}
+Pest Index        : {pest_index}
 
 PREDICTION RESULT
 -----------------
-Predicted Yield  : {prediction:.2f} tons/hectare
-Yield Band       : {band.capitalize()}
-Dataset Mean     : 23.72 tons/hectare
-Difference       : {prediction - 23.72:+.2f} tons/hectare
+Predicted Yield   : {prediction:.2f} tons/hectare
+Yield Band        : {band.capitalize()}
+Dataset Mean      : 23.72 tons/hectare
+Difference        : {prediction - 23.72:+.2f} tons/hectare
 
 AGRONOMIC RECOMMENDATIONS
 -------------------------
 {chr(10).join(f'{i}. {r}' for i, r in enumerate(recs, 1))}
 
 ====================================
-Model: Tuned XGBoost Regressor
-R² Score: 0.8429 | MAE: 1.3793 | RMSE: 1.7504
+Model : Tuned XGBoost Regressor
+R²    : 0.8429  |  MAE: 1.3793  |  RMSE: 1.7504
 """
             st.download_button(
                 "📥 Download Full Prediction Report",
@@ -425,7 +517,6 @@ R² Score: 0.8429 | MAE: 1.3793 | RMSE: 1.7504
                 use_container_width=True
             )
 
-            # Save to history
             st.session_state.history.append({
                 "Crop": crop_type.capitalize(),
                 "Season": season,
@@ -436,17 +527,14 @@ R² Score: 0.8429 | MAE: 1.3793 | RMSE: 1.7504
                 "Band": band.capitalize()
             })
 
-    # ── Prediction history ──
-    if st.session_state.history:
+    if st.session_state.get("history"):
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
         st.markdown("### 🕓 Prediction History")
         history_df = pd.DataFrame(st.session_state.history)
         st.dataframe(history_df, use_container_width=True, hide_index=True)
-
-        csv = history_df.to_csv(index=False)
         st.download_button(
             "📥 Download History as CSV",
-            data=csv,
+            data=history_df.to_csv(index=False),
             file_name="prediction_history.csv",
             mime="text/csv"
         )
@@ -465,18 +553,17 @@ elif page == "📊 Model Performance":
     </div>
     """, unsafe_allow_html=True)
 
-    # ── Key metrics ──
+    # Key metrics
     st.markdown('<div class="section-card">', unsafe_allow_html=True)
     st.markdown("### 🏆 Best Model: Tuned XGBoost — Key Metrics")
-
     m1, m2, m3, m4 = st.columns(4)
-    m1.metric("R² Score",  "0.8429", "Best model")
+    m1.metric("R² Score",  "0.8429",      "Best model")
     m2.metric("MAE",       "1.3793 t/ha", "Mean Absolute Error")
     m3.metric("RMSE",      "1.7504 t/ha", "Root Mean Square Error")
-    m4.metric("Accuracy",  "84.29%", "Variance explained")
+    m4.metric("Accuracy",  "84.29%",      "Variance explained")
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # ── Model comparison ──
+    # Model comparison
     st.markdown('<div class="section-card">', unsafe_allow_html=True)
     st.markdown("### 🤖 Model Comparison")
 
@@ -486,202 +573,161 @@ elif page == "📊 Model Performance":
         "RMSE":  [1.9709, 1.9611, 1.7680, 1.7504],
         "R²":    [0.8008, 0.8011, 0.8397, 0.8429],
     })
-
-    tab1, tab2, tab3 = st.tabs(["R² Score", "MAE", "RMSE"])
-
     colours = ["#74c69d", "#52b788", "#2d6a4f", "#1b4332"]
 
+    tab1, tab2, tab3 = st.tabs(["R² Score", "MAE", "RMSE"])
+    common = dict(plot_bgcolor="white", paper_bgcolor="white",
+                  showlegend=False, height=380,
+                  font=dict(color="#1a1a1a"),
+                  xaxis=dict(tickfont=dict(color="#1a1a1a")),
+                  yaxis=dict(tickfont=dict(color="#1a1a1a")))
+
     with tab1:
-        fig = go.Figure(go.Bar(
-            x=comparison_df["Model"], y=comparison_df["R²"],
-            marker_color=colours, text=comparison_df["R²"].round(4),
-            textposition="outside"
-        ))
-        fig.update_layout(
-            title="R² Score by Model (higher is better)",
-            yaxis=dict(range=[0.78, 0.86], title="R² Score"),
-            plot_bgcolor="white", paper_bgcolor="white",
-            showlegend=False, height=380
-        )
+        fig = go.Figure(go.Bar(x=comparison_df["Model"], y=comparison_df["R²"],
+            marker_color=colours, text=comparison_df["R²"].round(4), textposition="outside",
+            textfont=dict(color="#1a1a1a")))
+        fig.update_layout(title="R² Score by Model (higher is better)",
+            yaxis=dict(range=[0.78, 0.86], title="R² Score", tickfont=dict(color="#1a1a1a")),
+            **{k:v for k,v in common.items() if k != "yaxis"})
         st.plotly_chart(fig, use_container_width=True)
 
     with tab2:
-        fig = go.Figure(go.Bar(
-            x=comparison_df["Model"], y=comparison_df["MAE"],
-            marker_color=colours[::-1], text=comparison_df["MAE"].round(4),
-            textposition="outside"
-        ))
-        fig.update_layout(
-            title="Mean Absolute Error by Model (lower is better)",
-            yaxis=dict(range=[1.3, 1.65], title="MAE (t/ha)"),
-            plot_bgcolor="white", paper_bgcolor="white",
-            showlegend=False, height=380
-        )
+        fig = go.Figure(go.Bar(x=comparison_df["Model"], y=comparison_df["MAE"],
+            marker_color=colours[::-1], text=comparison_df["MAE"].round(4), textposition="outside",
+            textfont=dict(color="#1a1a1a")))
+        fig.update_layout(title="Mean Absolute Error by Model (lower is better)",
+            yaxis=dict(range=[1.3, 1.65], title="MAE (t/ha)", tickfont=dict(color="#1a1a1a")),
+            **{k:v for k,v in common.items() if k != "yaxis"})
         st.plotly_chart(fig, use_container_width=True)
 
     with tab3:
-        fig = go.Figure(go.Bar(
-            x=comparison_df["Model"], y=comparison_df["RMSE"],
-            marker_color=colours[::-1], text=comparison_df["RMSE"].round(4),
-            textposition="outside"
-        ))
-        fig.update_layout(
-            title="Root Mean Square Error by Model (lower is better)",
-            yaxis=dict(range=[1.7, 2.05], title="RMSE (t/ha)"),
-            plot_bgcolor="white", paper_bgcolor="white",
-            showlegend=False, height=380
-        )
+        fig = go.Figure(go.Bar(x=comparison_df["Model"], y=comparison_df["RMSE"],
+            marker_color=colours[::-1], text=comparison_df["RMSE"].round(4), textposition="outside",
+            textfont=dict(color="#1a1a1a")))
+        fig.update_layout(title="Root Mean Square Error by Model (lower is better)",
+            yaxis=dict(range=[1.7, 2.05], title="RMSE (t/ha)", tickfont=dict(color="#1a1a1a")),
+            **{k:v for k,v in common.items() if k != "yaxis"})
         st.plotly_chart(fig, use_container_width=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # ── Actual vs Predicted ──
+    # Actual vs Predicted
     if actual_pred_df is not None:
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
         st.markdown("### 🎯 Actual vs Predicted Yield")
-
         sample_df = actual_pred_df.sample(min(2000, len(actual_pred_df)), random_state=42)
-
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(
-            x=sample_df["Actual"], y=sample_df["Predicted"],
-            mode="markers",
-            marker=dict(color="#52b788", size=4, opacity=0.5),
-            name="Predictions"
-        ))
-        # Perfect prediction line
         mn = float(sample_df[["Actual","Predicted"]].min().min())
         mx = float(sample_df[["Actual","Predicted"]].max().max())
-        fig.add_trace(go.Scatter(
-            x=[mn, mx], y=[mn, mx],
-            mode="lines", line=dict(color="#e63946", dash="dash", width=2),
-            name="Perfect Prediction"
-        ))
-        fig.update_layout(
-            xaxis_title="Actual Yield (t/ha)",
-            yaxis_title="Predicted Yield (t/ha)",
-            plot_bgcolor="white", paper_bgcolor="white",
-            height=450, legend=dict(x=0.02, y=0.97)
-        )
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=sample_df["Actual"], y=sample_df["Predicted"],
+            mode="markers", marker=dict(color="#52b788", size=4, opacity=0.5), name="Predictions"))
+        fig.add_trace(go.Scatter(x=[mn,mx], y=[mn,mx], mode="lines",
+            line=dict(color="#e63946", dash="dash", width=2), name="Perfect Prediction"))
+        fig.update_layout(xaxis_title="Actual Yield (t/ha)", yaxis_title="Predicted Yield (t/ha)",
+            plot_bgcolor="white", paper_bgcolor="white", height=450,
+            legend=dict(x=0.02, y=0.97, font=dict(color="#1a1a1a")),
+            font=dict(color="#1a1a1a"),
+            xaxis=dict(tickfont=dict(color="#1a1a1a"), title_font=dict(color="#1a1a1a")),
+            yaxis=dict(tickfont=dict(color="#1a1a1a"), title_font=dict(color="#1a1a1a")))
         st.plotly_chart(fig, use_container_width=True)
-        st.caption("Each point represents one test-set record. Points along the dashed line indicate perfect prediction.")
+        st.caption("Each point is one test-set record. Points along the dashed line = perfect prediction.")
         st.markdown('</div>', unsafe_allow_html=True)
 
-        # ── Residual analysis ──
+        # Residuals
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
         st.markdown("### 📉 Residual Error Distribution")
-
         residuals = actual_pred_df["Actual"] - actual_pred_df["Predicted"]
-
-        fig = go.Figure()
-        fig.add_trace(go.Histogram(
-            x=residuals, nbinsx=80,
-            marker_color="#52b788", opacity=0.8,
-            name="Residuals"
-        ))
+        fig = go.Figure(go.Histogram(x=residuals, nbinsx=80,
+            marker_color="#52b788", opacity=0.8))
         fig.add_vline(x=0, line_dash="dash", line_color="#e63946", line_width=2,
-                      annotation_text="Zero Error", annotation_position="top right")
-        fig.update_layout(
-            xaxis_title="Residual (Actual − Predicted)",
-            yaxis_title="Frequency",
-            plot_bgcolor="white", paper_bgcolor="white",
-            height=380, showlegend=False
-        )
+            annotation_text="Zero Error", annotation_position="top right",
+            annotation_font_color="#1a1a1a")
+        fig.update_layout(xaxis_title="Residual (Actual − Predicted)", yaxis_title="Frequency",
+            plot_bgcolor="white", paper_bgcolor="white", height=380, showlegend=False,
+            font=dict(color="#1a1a1a"),
+            xaxis=dict(tickfont=dict(color="#1a1a1a"), title_font=dict(color="#1a1a1a")),
+            yaxis=dict(tickfont=dict(color="#1a1a1a"), title_font=dict(color="#1a1a1a")))
         st.plotly_chart(fig, use_container_width=True)
-        st.caption("A near-normal distribution centred at zero confirms the model has no systematic over- or under-prediction bias.")
+        st.caption("Near-normal distribution centred at zero confirms no systematic prediction bias.")
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # ── Feature importance ──
+    # Feature importance
     if feature_imp_df is not None:
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
         st.markdown("### 🔑 Feature Importance (XGBoost Gain Score)")
-
         fi = feature_imp_df.sort_values("Importance", ascending=True).tail(15)
-        fig = go.Figure(go.Bar(
-            x=fi["Importance"], y=fi["Feature"],
-            orientation="h",
-            marker=dict(
-                color=fi["Importance"],
-                colorscale=[[0,"#d8f3dc"],[0.5,"#52b788"],[1,"#1b4332"]],
-                showscale=False
-            )
-        ))
-        fig.update_layout(
-            xaxis_title="Importance Score (Gain)",
-            yaxis_title="",
-            plot_bgcolor="white", paper_bgcolor="white",
-            height=420, margin=dict(l=160)
-        )
+        fig = go.Figure(go.Bar(x=fi["Importance"], y=fi["Feature"], orientation="h",
+            marker=dict(color=fi["Importance"],
+                colorscale=[[0,"#d8f3dc"],[0.5,"#52b788"],[1,"#1b4332"]], showscale=False)))
+        fig.update_layout(xaxis_title="Importance Score (Gain)", yaxis_title="",
+            plot_bgcolor="white", paper_bgcolor="white", height=420, margin=dict(l=160),
+            font=dict(color="#1a1a1a"),
+            xaxis=dict(tickfont=dict(color="#1a1a1a"), title_font=dict(color="#1a1a1a")),
+            yaxis=dict(tickfont=dict(color="#1a1a1a")))
         st.plotly_chart(fig, use_container_width=True)
-        st.caption("Gain-based importance: measures how much each feature reduces prediction error when used as a split criterion.")
+        st.caption("Gain-based importance: how much each feature reduces prediction error across all trees.")
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # ── Crop-specific results ──
+    # Crop-specific
     st.markdown('<div class="section-card">', unsafe_allow_html=True)
     st.markdown("### 🌱 Crop-Specific Model Performance")
-
     crop_df = pd.DataFrame({
-        "Crop":  ["Cotton", "Rice", "Wheat", "Soybean", "Corn"],
-        "MAE":   [1.2632,   1.2351, 1.4348, 1.4498,    1.5319],
-        "RMSE":  [1.6029,   1.5627, 1.8198, 1.8363,    1.9397],
-        "R²":    [0.8430,   0.8181, 0.8003, 0.7725,    0.7496],
+        "Crop":  ["Cotton","Rice","Wheat","Soybean","Corn"],
+        "MAE":   [1.2632, 1.2351, 1.4348, 1.4498, 1.5319],
+        "RMSE":  [1.6029, 1.5627, 1.8198, 1.8363, 1.9397],
+        "R²":    [0.8430, 0.8181, 0.8003, 0.7725, 0.7496],
     })
-
-    fig = go.Figure()
     bar_colours = ["#1b4332" if r >= 0.75 else "#e63946" for r in crop_df["R²"]]
-    fig.add_trace(go.Bar(
-        x=crop_df["Crop"], y=crop_df["R²"],
-        marker_color=bar_colours,
+    fig = go.Figure()
+    fig.add_trace(go.Bar(x=crop_df["Crop"], y=crop_df["R²"], marker_color=bar_colours,
         text=crop_df["R²"].round(4), textposition="outside",
-        name="R² Score"
-    ))
+        textfont=dict(color="#1a1a1a"), name="R² Score"))
     fig.add_hline(y=0.75, line_dash="dash", line_color="#f4a261", line_width=2,
-                  annotation_text="Satisfactory threshold (R²=0.75)", annotation_position="top left")
+        annotation_text="Satisfactory threshold (R²=0.75)", annotation_position="top left",
+        annotation_font_color="#1a1a1a")
     fig.update_layout(
-        yaxis=dict(range=[0.72, 0.88], title="R² Score"),
-        xaxis_title="Crop Type",
-        plot_bgcolor="white", paper_bgcolor="white",
-        height=380, showlegend=False
-    )
+        yaxis=dict(range=[0.72, 0.88], title="R² Score",
+                   tickfont=dict(color="#1a1a1a"), title_font=dict(color="#1a1a1a")),
+        xaxis=dict(title="Crop Type", tickfont=dict(color="#1a1a1a"), title_font=dict(color="#1a1a1a")),
+        plot_bgcolor="white", paper_bgcolor="white", height=380,
+        showlegend=False, font=dict(color="#1a1a1a"))
     st.plotly_chart(fig, use_container_width=True)
-
     st.dataframe(
-        crop_df.style.highlight_max(subset=["R²"], color="#d8f3dc")
-                     .highlight_min(subset=["R²"], color="#fde8e9")
-                     .format({"MAE": "{:.4f}", "RMSE": "{:.4f}", "R²": "{:.4f}"}),
-        use_container_width=True, hide_index=True
-    )
+        crop_df.style
+            .highlight_max(subset=["R²"], color="#d8f3dc")
+            .highlight_min(subset=["R²"], color="#fde8e9")
+            .format({"MAE":"{:.4f}","RMSE":"{:.4f}","R²":"{:.4f}"}),
+        use_container_width=True, hide_index=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # ── Model summary ──
+    # Model summary
     st.markdown('<div class="section-card">', unsafe_allow_html=True)
     st.markdown("### ✅ Model Summary")
-
     s1, s2 = st.columns(2)
     with s1:
         st.markdown("""
-        | Property | Value |
-        |----------|-------|
-        | Algorithm | Tuned XGBoost Regressor |
-        | n_estimators | 500 |
-        | max_depth | 5 |
-        | learning_rate | 0.1 |
-        | subsample | 0.7 |
-        | gamma | 0.3 |
-        | colsample_bytree | 1.0 |
-        """)
+| Property | Value |
+|----------|-------|
+| Algorithm | Tuned XGBoost Regressor |
+| n_estimators | 500 |
+| max_depth | 5 |
+| learning_rate | 0.1 |
+| subsample | 0.7 |
+| gamma | 0.3 |
+| colsample_bytree | 1.0 |
+""")
     with s2:
         st.markdown("""
-        | Metric | Value |
-        |--------|-------|
-        | R² Score | 0.8429 |
-        | MAE | 1.3793 t/ha |
-        | RMSE | 1.7504 t/ha |
-        | Accuracy | 84.29% |
-        | Training records | 197,855 |
-        | Test records | 49,464 |
-        | Status | ✅ Production Ready |
-        """)
+| Metric | Value |
+|--------|-------|
+| R² Score | 0.8429 |
+| MAE | 1.3793 t/ha |
+| RMSE | 1.7504 t/ha |
+| Accuracy | 84.29% |
+| Training records | 197,855 |
+| Test records | 49,464 |
+| Status | ✅ Production Ready |
+""")
     st.markdown('</div>', unsafe_allow_html=True)
 
 
@@ -703,76 +749,76 @@ elif page == "ℹ️ About System":
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
         st.markdown("### 🎯 Project Overview")
         st.markdown("""
-        This system was developed as part of a final year undergraduate research project in the Department of
-        **[Department Name]**, **[University Name]**, for the 2025/2026 academic session.
+This system was developed as part of a final year undergraduate research project in the Department of
+**[Department Name]**, **[University Name]**, for the 2025/2026 academic session.
 
-        The system applies supervised machine learning techniques to predict crop yield in
-        **tonnes per hectare** for five key Nigerian crops — maize, rice, soybean, wheat, and cotton —
-        using an integrated dataset combining weather variables, soil characteristics, and agronomic parameters.
+The system applies supervised machine learning techniques to predict crop yield in
+**tonnes per hectare** for five key Nigerian crops — maize, rice, soybean, wheat, and cotton —
+using an integrated dataset combining weather variables, soil characteristics, and agronomic parameters.
 
-        The motivation for the system arises from Nigeria's worsening food security crisis, in which
-        acute food insecurity affected approximately **100 million people** in early 2024, and the absence
-        of locally calibrated, data-driven yield prediction tools for Nigerian farmers and policymakers.
-        """)
+The motivation for the system arises from Nigeria's worsening food security crisis, in which
+acute food insecurity affected approximately **100 million people** in early 2024, and the absence
+of locally calibrated, data-driven yield prediction tools for Nigerian farmers and policymakers.
+""")
         st.markdown('</div>', unsafe_allow_html=True)
 
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
         st.markdown("### 🤖 Machine Learning Pipeline")
         st.markdown("""
-        | Stage | Detail |
-        |-------|--------|
-        | Dataset | 247,319 records across 5 crops |
-        | Data Sources | FAO, World Bank, NIMET, ISRIC, Kaggle |
-        | Features | 10 numerical + 7 categorical (17 total) |
-        | Preprocessing | StandardScaler, One-Hot Encoding, 80/20 split |
-        | Models Evaluated | Random Forest, Extra Trees, XGBoost |
-        | Tuning Method | RandomizedSearchCV with 5-fold cross-validation |
-        | Best Model | Tuned XGBoost (R² = 0.8429) |
-        | Deployment | Streamlit web application |
-        """)
+| Stage | Detail |
+|-------|--------|
+| Dataset | 247,319 records across 5 crops |
+| Data Sources | FAO, World Bank, NIMET, ISRIC, Kaggle |
+| Features | 10 numerical + 7 categorical (17 total) |
+| Preprocessing | StandardScaler, One-Hot Encoding, 80/20 split |
+| Models Evaluated | Random Forest, Extra Trees, XGBoost |
+| Tuning Method | RandomizedSearchCV with 5-fold cross-validation |
+| Best Model | Tuned XGBoost (R² = 0.8429) |
+| Deployment | Streamlit web application |
+""")
         st.markdown('</div>', unsafe_allow_html=True)
 
     with a2:
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
         st.markdown("### ✨ System Features")
         st.markdown("""
-        - 🌾 **Crop Yield Prediction** with live gauge visualisation
-        - 💡 **Smart Recommendations** tailored to crop and yield band
-        - 📊 **Model Performance Dashboard** with full evaluation metrics
-        - 🎯 **Actual vs Predicted** scatter plot
-        - 📉 **Residual Error Analysis**
-        - 🔑 **Feature Importance Chart**
-        - 🌱 **Crop-Specific Evaluation** for all five crops
-        - 🕓 **Prediction History** with session tracking
-        - 📥 **Downloadable Prediction Report**
-        - ⚙️ **Advanced Input Controls** for soil and weather parameters
-        """)
+- 🌾 **Crop Yield Prediction** with live gauge visualisation
+- 💡 **Smart Recommendations** tailored to crop and yield band
+- 📊 **Model Performance Dashboard** with full evaluation metrics
+- 🎯 **Actual vs Predicted** scatter plot
+- 📉 **Residual Error Analysis**
+- 🔑 **Feature Importance Chart**
+- 🌱 **Crop-Specific Evaluation** for all five crops
+- 🕓 **Prediction History** with session tracking
+- 📥 **Downloadable Prediction Report**
+- ⚙️ **Advanced Input Controls** for soil and weather parameters
+""")
         st.markdown('</div>', unsafe_allow_html=True)
 
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
         st.markdown("### 🌾 Crops Covered")
         st.markdown("""
-        | Crop | Threshold Met |
-        |------|--------------|
-        | Cotton | ✅ R²=0.843 |
-        | Rice | ✅ R²=0.818 |
-        | Wheat | ✅ R²=0.800 |
-        | Soybean | ✅ R²=0.773 |
-        | Corn | ⚠️ R²=0.750 |
-        """)
+| Crop | R² Score | Status |
+|------|----------|--------|
+| Cotton | 0.8430 | ✅ |
+| Rice | 0.8181 | ✅ |
+| Wheat | 0.8003 | ✅ |
+| Soybean | 0.7725 | ✅ |
+| Corn | 0.7496 | ⚠️ |
+""")
         st.markdown('</div>', unsafe_allow_html=True)
 
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
         st.markdown("### 👤 Project Details")
         st.markdown("""
-        **Student:** [Your Name]
+**Student:** [Your Name]
 
-        **Matric No:** [Your Matric]
+**Matric No:** [Your Matric]
 
-        **Supervisor:** [Supervisor Name]
+**Supervisor:** [Supervisor Name]
 
-        **Department:** [Department]
+**Department:** [Department]
 
-        **Year:** 2025/2026
-        """)
+**Year:** 2025/2026
+""")
         st.markdown('</div>', unsafe_allow_html=True)
