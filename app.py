@@ -29,7 +29,7 @@ st.markdown("""
 
 /* ── Metric cards ── */
 [data-testid="metric-container"] {
-    background: #ffffff;
+    background: #000000;
     border: 1px solid #d8f3dc;
     border-left: 5px solid #40916c;
     border-radius: 10px;
