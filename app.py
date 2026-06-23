@@ -34,19 +34,39 @@ html, body, [class*="css"], p, span, div, li, td, th, label,
 
 /* ── Sidebar ── */
 [data-testid="stSidebar"] { background: #1b4332; }
+[data-testid="stSidebar"],
 [data-testid="stSidebar"] *,
 [data-testid="stSidebar"] p,
 [data-testid="stSidebar"] span,
 [data-testid="stSidebar"] label,
 [data-testid="stSidebar"] div,
+[data-testid="stSidebar"] h1,
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3,
+[data-testid="stSidebar"] em,
+[data-testid="stSidebar"] strong,
+[data-testid="stSidebar"] small,
 [data-testid="stSidebar"] .stMarkdown,
+[data-testid="stSidebar"] .stMarkdown *,
 [data-testid="stSidebar"] .stMarkdown p,
 [data-testid="stSidebar"] .stMarkdown span,
-[data-testid="stSidebar"] small {
+[data-testid="stSidebar"] .stMarkdown h1,
+[data-testid="stSidebar"] .stMarkdown h2,
+[data-testid="stSidebar"] .stMarkdown h3,
+[data-testid="stSidebar"] .stMarkdown em,
+[data-testid="stSidebar"] .stMarkdown strong,
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"],
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] * {
     color: #d8f3dc !important;
 }
 [data-testid="stSidebar"] hr { border-color: #40916c55; }
-[data-testid="stSidebar"] .stRadio label { font-size: 1rem; padding: 6px 0; }
+[data-testid="stSidebar"] .stRadio label,
+[data-testid="stSidebar"] .stRadio label p,
+[data-testid="stSidebar"] .stRadio label span {
+    font-size: 1rem;
+    padding: 6px 0;
+    color: #d8f3dc !important;
+}
 
 /* ── Metric cards ── */
 [data-testid="metric-container"] {
@@ -93,9 +113,11 @@ html, body, [class*="css"], p, span, div, li, td, th, label,
     padding: 28px 32px;
     border-radius: 14px;
     margin-bottom: 24px;
+    color: #ffffff !important;
 }
+.page-header *   { color: #ffffff !important; }
 .page-header h1  { color: #ffffff !important; margin: 0; font-size: 2rem; }
-.page-header p   { color: #d8f3dc !important; margin: 6px 0 0 0; font-size: 1rem; }
+.page-header p   { color: #ffffff !important; margin: 6px 0 0 0; font-size: 1rem; }
 
 /* ── Yield band badges ── */
 .badge-high { background:#d8f3dc; color:#1b4332 !important; padding:6px 14px; border-radius:20px; font-weight:700; display:inline-block; }
@@ -203,10 +225,33 @@ div.stButton > button span { color: #ffffff !important; }
 [data-testid="stDownloadButton"] > button p,
 [data-testid="stDownloadButton"] > button span { color: #ffffff !important; }
 
-/* ── selectbox / dropdown text ── */
+/* ── Selectbox / dropdown — selected value and all options ── */
 [data-baseweb="select"] span,
 [data-baseweb="select"] div,
-[data-baseweb="menu"] li { color: #1a1a1a !important; }
+[data-baseweb="select"] input,
+[data-baseweb="select"] [class*="placeholder"],
+[data-baseweb="select"] [class*="singleValue"],
+[data-baseweb="select"] [class*="ValueContainer"] *,
+[data-baseweb="select"] [class*="control"] *,
+div[data-testid="stSelectbox"] div,
+div[data-testid="stSelectbox"] span,
+div[data-testid="stSelectbox"] input,
+/* Dropdown menu options */
+[data-baseweb="menu"] li,
+[data-baseweb="menu"] li *,
+[data-baseweb="menu"] [role="option"],
+[data-baseweb="menu"] [role="option"] *,
+ul[role="listbox"] li,
+ul[role="listbox"] li * {
+    color: #1a1a1a !important;
+    background-color: #ffffff;
+}
+/* Hover state on dropdown options */
+[data-baseweb="menu"] [role="option"]:hover,
+[data-baseweb="menu"] [role="option"]:hover * {
+    background-color: #d8f3dc !important;
+    color: #1b4332 !important;
+}
 
 /* ── Radio button text ── */
 .stRadio div label span { color: #d8f3dc !important; }
