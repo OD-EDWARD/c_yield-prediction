@@ -702,7 +702,7 @@ elif page == "📊 Model Performance":
 
     # Model summary
     st.markdown('<div class="section-card">', unsafe_allow_html=True)
-    st.markdown("### Model Summary")
+    st.markdown("### ✅ Model Summary")
     s1, s2 = st.columns(2)
     with s1:
         st.markdown("""
@@ -726,7 +726,7 @@ elif page == "📊 Model Performance":
 | Accuracy | 84.29% |
 | Training records | 197,855 |
 | Test records | 49,464 |
-| Status | Production Ready |
+| Status | ✅ Production Ready |
 """)
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -734,11 +734,11 @@ elif page == "📊 Model Performance":
 # ══════════════════════════════════════════════════════════════════════════════
 # PAGE 3 — ABOUT
 # ══════════════════════════════════════════════════════════════════════════════
-elif page == "About System":
+elif page == "ℹ️ About System":
 
     st.markdown("""
     <div class="page-header">
-        <h1> About This System</h1>
+        <h1>ℹ️ About This System</h1>
         <p>An Intelligent Machine Learning-Based Crop Yield Prediction System — Final Year Project 2025/2026</p>
     </div>
     """, unsafe_allow_html=True)
@@ -747,7 +747,7 @@ elif page == "About System":
 
     with a1:
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        st.markdown("### Project Overview")
+        st.markdown("### 🎯 Project Overview")
         st.markdown("""
 This system was developed as part of a final year undergraduate research project in the Department of
 **[Department Name]**, **[University Name]**, for the 2025/2026 academic session.
@@ -763,7 +763,7 @@ of locally calibrated, data-driven yield prediction tools for Nigerian farmers a
         st.markdown('</div>', unsafe_allow_html=True)
 
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        st.markdown("### Machine Learning Pipeline")
+        st.markdown("### 🤖 Machine Learning Pipeline")
         st.markdown("""
 | Stage | Detail |
 |-------|--------|
@@ -780,18 +780,18 @@ of locally calibrated, data-driven yield prediction tools for Nigerian farmers a
 
     with a2:
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        st.markdown("### System Features")
+        st.markdown("### ✨ System Features")
         st.markdown("""
--  **Crop Yield Prediction** with live gauge visualisation
--  **Smart Recommendations** tailored to crop and yield band
--  **Model Performance Dashboard** with full evaluation metrics
--  **Actual vs Predicted** scatter plot
--  **Residual Error Analysis**
--  **Feature Importance Chart**
--  **Crop-Specific Evaluation** for all five crops
--  **Prediction History** with session tracking
--  **Downloadable Prediction Report**
--  **Advanced Input Controls** for soil and weather parameters
+- 🌾 **Crop Yield Prediction** with live gauge visualisation
+- 💡 **Smart Recommendations** tailored to crop and yield band
+- 📊 **Model Performance Dashboard** with full evaluation metrics
+- 🎯 **Actual vs Predicted** scatter plot
+- 📉 **Residual Error Analysis**
+- 🔑 **Feature Importance Chart**
+- 🌱 **Crop-Specific Evaluation** for all five crops
+- 🕓 **Prediction History** with session tracking
+- 📥 **Downloadable Prediction Report**
+- ⚙️ **Advanced Input Controls** for soil and weather parameters
 """)
         st.markdown('</div>', unsafe_allow_html=True)
 
