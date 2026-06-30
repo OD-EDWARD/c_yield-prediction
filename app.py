@@ -302,7 +302,7 @@ with st.sidebar:
 
     page = st.radio(
         "Navigate",
-        ["Prediction", "Model Performance",]
+        ["Prediction", "Model Performance"]
         label_visibility="collapsed"
     )
 
