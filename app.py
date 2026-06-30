@@ -306,16 +306,6 @@ with st.sidebar:
         label_visibility="collapsed"
     )
 
-    st.markdown("---")
-    st.markdown("**Model:** Tuned XGBoost")
-    st.markdown("**R² Score:** 0.8429")
-    st.markdown("**Accuracy:** 84.29%")
-    st.markdown("---")
-    st.markdown(
-        "<small style='color:#d8f3dc'>© 2026 Smart Crop Yield Predictor<br>Final Year Project</small>",
-        unsafe_allow_html=True
-    )
-
 # ──────────────────────────────────────────────────────────────────────────────
 # HELPER: GAUGE CHART
 # ──────────────────────────────────────────────────────────────────────────────
