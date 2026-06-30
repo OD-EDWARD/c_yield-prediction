@@ -302,7 +302,7 @@ with st.sidebar:
 
     page = st.radio(
         "Navigate",
-        ["🏠 Prediction", "📊 Model Performance", "ℹ️ About System"],
+        ["🏠 Prediction", "📊 Model Performance"],
         label_visibility="collapsed"
     )
 
@@ -774,96 +774,3 @@ elif page == "📊 Model Performance":
 | Status | ✅ Production Ready |
 """)
     st.markdown('</div>', unsafe_allow_html=True)
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# PAGE 3 — ABOUT
-# ══════════════════════════════════════════════════════════════════════════════
-elif page == "ℹ️ About System":
-
-    st.markdown("""
-    <div class="page-header">
-        <h1>ℹ️ About This System</h1>
-        <p>An Intelligent Machine Learning-Based Crop Yield Prediction System — Final Year Project 2025/2026</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    a1, a2 = st.columns([2, 1])
-
-    with a1:
-        st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        st.markdown("### 🎯 Project Overview")
-        st.markdown("""
-This system was developed as part of a final year undergraduate research project in the Department of
-**[Department Name]**, **[University Name]**, for the 2025/2026 academic session.
-
-The system applies supervised machine learning techniques to predict crop yield in
-**tonnes per hectare** for five key Nigerian crops — maize, rice, soybean, wheat, and cotton —
-using an integrated dataset combining weather variables, soil characteristics, and agronomic parameters.
-
-The motivation for the system arises from Nigeria's worsening food security crisis, in which
-acute food insecurity affected approximately **100 million people** in early 2024, and the absence
-of locally calibrated, data-driven yield prediction tools for Nigerian farmers and policymakers.
-""")
-        st.markdown('</div>', unsafe_allow_html=True)
-
-        st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        st.markdown("### 🤖 Machine Learning Pipeline")
-        st.markdown("""
-| Stage | Detail |
-|-------|--------|
-| Dataset | 247,319 records across 5 crops |
-| Data Sources | FAO, World Bank, NIMET, ISRIC, Kaggle |
-| Features | 10 numerical + 7 categorical (17 total) |
-| Preprocessing | StandardScaler, One-Hot Encoding, 80/20 split |
-| Models Evaluated | Random Forest, Extra Trees, XGBoost |
-| Tuning Method | RandomizedSearchCV with 5-fold cross-validation |
-| Best Model | Tuned XGBoost (R² = 0.8429) |
-| Deployment | Streamlit web application |
-""")
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    with a2:
-        st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        st.markdown("### ✨ System Features")
-        st.markdown("""
-- 🌾 **Crop Yield Prediction** with live gauge visualisation
-- 💡 **Smart Recommendations** tailored to crop and yield band
-- 📊 **Model Performance Dashboard** with full evaluation metrics
-- 🎯 **Actual vs Predicted** scatter plot
-- 📉 **Residual Error Analysis**
-- 🔑 **Feature Importance Chart**
-- 🌱 **Crop-Specific Evaluation** for all five crops
-- 🕓 **Prediction History** with session tracking
-- 📥 **Downloadable Prediction Report**
-- ⚙️ **Advanced Input Controls** for soil and weather parameters
-""")
-        st.markdown('</div>', unsafe_allow_html=True)
-
-        st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        st.markdown("### 🌾 Crops Covered")
-        st.markdown("""
-| Crop | R² Score | Status |
-|------|----------|--------|
-| Cotton | 0.8430 | ✅ |
-| Rice | 0.8181 | ✅ |
-| Wheat | 0.8003 | ✅ |
-| Soybean | 0.7725 | ✅ |
-| Corn | 0.7496 | ⚠️ |
-""")
-        st.markdown('</div>', unsafe_allow_html=True)
-
-        st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        st.markdown("### 👤 Project Details")
-        st.markdown("""
-**Student:** [Your Name]
-
-**Matric No:** [Your Matric]
-
-**Supervisor:** [Supervisor Name]
-
-**Department:** [Department]
-
-**Year:** 2025/2026
-""")
-        st.markdown('</div>', unsafe_allow_html=True)
