@@ -296,13 +296,13 @@ feature_imp_df = load_feature_importance()
 # SIDEBAR
 # ──────────────────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("## 🌾 CropYield AI")
+    st.markdown("##  CropYield AI")
     st.markdown("*Intelligent Yield Forecasting System*")
     st.markdown("---")
 
     page = st.radio(
         "Navigate",
-        ["🏠 Prediction", "📊 Model Performance", "ℹ️ About System"],
+        ["Prediction", "Model Performance",],
         label_visibility="collapsed"
     )
 
