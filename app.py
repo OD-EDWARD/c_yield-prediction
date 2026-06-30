@@ -301,7 +301,7 @@ with st.sidebar:
     st.markdown("---")
 
     page = st.radio(
-        "Navigate",
+        "Navigate":
         ["Prediction", "Model Performance"]
         label_visibility="collapsed"
     )
